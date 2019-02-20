@@ -12,3 +12,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.search-box {
+  height: 5rem !important;
+  border-radius: 2.5rem !important;
+}
+
+.search-box-container {
+  height: 400px;
+  margin: 150px 0 15px 0;
+}
+
+.search-go-btn {
+  height: 5rem !important;
+  border-radius: 2.5rem !important;
+}
+
