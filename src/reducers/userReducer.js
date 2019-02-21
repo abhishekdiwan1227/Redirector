@@ -76,6 +76,28 @@ export default function user(state = initialState, action) {
                 error: action.payload.error,
                 loading: false
             }
+        case "REGISTER_EXTERNAL_USER_BEGIN":
+            return {
+                ...state,
+                loading: true
+            }
+        case "REGISTER_EXTERNAL_USER_SUCCESS":
+            sessionStorage.setItem("authToken", action.payload.token);
+            return {
+                ...state,
+                isLoggedIn: true,
+                userId: action.payload.user.id,
+                name: action.payload.user.name,
+                email: action.payload.user.email,
+                loading: false
+            }
+        case "REGISTER_EXTERNAL_USER_FAILURE":
+            return {
+                ...state,
+                isLoggedIn: false,
+                error: action.payload.error,
+                loading: false
+            }
         default: return state;
     }
 }

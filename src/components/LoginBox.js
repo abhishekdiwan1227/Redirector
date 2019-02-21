@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from 'react-google-login';
 import { connect } from 'react-redux';
-import { mapUser, tryLogin, getUserPage } from '../actions/userActions';
+import { mapUser, tryLogin, getUserPage, addThridPartyUser } from '../actions/userActions';
 import { Redirect } from 'react-router-dom';
 
 class LoginBox extends Component {
@@ -16,9 +16,23 @@ class LoginBox extends Component {
     }
 
     facebookLoginResponse = response => {
+        var user = {
+            id: response.id,
+            name: response.name,
+            email: response.email,
+        }
+        debugger;
+        this.props.registerExternalUser(user);
     }
 
     googleLoginSuccessResponse = response => {
+        var user = {
+            id: response.profileObj.googleId,
+            name: response.profileObj.givenName + " " + response.profileObj.familyName,
+            email: response.profileObj.email,
+        }
+        debugger;
+        this.props.registerExternalUser(user);
     }
 
     handleTextChange = event => {
@@ -52,29 +66,30 @@ class LoginBox extends Component {
         if (this.props.toRegisterPage) {
             return <Redirect to='/register' />
         }
-        if (this.props.isLoggedIn)
-        {
+        if (this.props.isLoggedIn) {
             return <Redirect to='/' />
         }
         return (
             <div className='login-box' >
-                <FacebookLogin
-                    appId='1807025612736097'
-                    autoLoad={false}
-                    fields='name, email, picture'
-                    onClick={this.facebookLogin}
-                    callback={this.facebookLoginResponse}
-                    render={renderProps => (
-                        <button className='btn login-btn' onClick={renderProps.onClick}>Login With Facebook</button>
-                    )}
-                />
-                <GoogleLogin
-                    clientId="560401063357-efcng7rfbo1nl0dakhr1o15lrfnsq98v.apps.googleusercontent.com"
-                    onSuccess={this.googleLoginSuccessResponse}
-                    render={renderProps => (
-                        <button className='btn login-btn' onClick={renderProps.onClick}>Login With Google</button>
-                    )}
-                />
+                <div className='d-flex justify-content-center'>
+                    <FacebookLogin
+                        appId='1807025612736097'
+                        autoLoad={false}
+                        fields='name, email, picture'
+                        onClick={this.facebookLogin}
+                        callback={this.facebookLoginResponse}
+                        render={renderProps => (
+                            <button className='btn login-btn' onClick={renderProps.onClick}>Login With Facebook</button>
+                        )}
+                    />
+                    <GoogleLogin
+                        clientId="560401063357-efcng7rfbo1nl0dakhr1o15lrfnsq98v.apps.googleusercontent.com"
+                        onSuccess={this.googleLoginSuccessResponse}
+                        render={renderProps => (
+                            <button className='btn login-btn' onClick={renderProps.onClick}>Login With Google</button>
+                        )}
+                    />
+                </div>
 
                 <p className='d-flex justify-content-center text-muted'>or</p>
                 <div className="form-group">
@@ -110,7 +125,8 @@ function mapDispatchToProps(dispatch) {
     return {
         mapUser: user => dispatch(mapUser(user)),
         loginUser: user => dispatch(tryLogin(user)),
-        getRegisterPage: () => {dispatch(getUserPage())}
+        getRegisterPage: () => { dispatch(getUserPage()) },
+        registerExternalUser: user => { dispatch(addThridPartyUser(user)) }
     }
 }
 

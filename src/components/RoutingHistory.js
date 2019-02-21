@@ -9,31 +9,48 @@ class RoutingHistory extends Component {
         this.props.validLoggedInUser(sessionStorage.getItem("authToken"));
     }
 
-    // componentDidMount() {
-    //     this.props.getSeachedRoutes(this.props.userId);
-    // }
+    componentDidMount() {
+        if (this.props.isUserLoggedIn) {
+            this.props.getSeachedRoutes(this.props.userId);
+        }
+    }
 
     render() {
-        return (
-            <div className='d-flex justify-content-center'>
-                <ul>
-                  
-                </ul>
-            </div>
-        )
+        if (!this.props.isUserLoggedIn) {
+            return <Redirect to='/login' />
+        }
+        if (this.props.searchedRoutes.length > 0) {
+            return (
+                <div className='d-flex justify-content-center'>
+                    <ul className="list-unstyled">
+                        {this.props.searchedRoutes.map(route =>
+                            <li key={route.url}>{route.key}</li>
+                        )}
+                    </ul>
+                </div>
+            )
+        }
+        else {
+            return (
+                <div className='d-flex justify-content-center'>
+                    No Records
+                </div>
+            )
+        }
     }
 }
 
 function mapStateToProps(state) {
     return {
         searchedRoutes: state.search.searchedUris,
-        userId: state.user.userId
+        userId: state.user.userId,
+        isUserLoggedIn: state.user.isLoggedIn,
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        getSeachedRoutes: userId => dispatch(getRoutesHistory(userId)), 
+        getSeachedRoutes: userId => dispatch(getRoutesHistory(userId)),
         validLoggedInUser: token => dispatch(checkForLoggedInUser(token)),
     }
 }

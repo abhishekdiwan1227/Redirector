@@ -42,7 +42,6 @@ export function showUrlSearches() {
 }
 
 export function getRoutesHistory(userId) {
-    debugger;
     return dispatch => {
         dispatch(fetchHistoryBegin())
         return Axios.get("http://localhost:8080/api/search/history/" + userId)

@@ -108,3 +108,35 @@ export function checkUserFailure(error) {
         payload: error
     }
 }
+
+export function addThridPartyUser(user) {
+    return dispatch => {
+        dispatch(registerThirdPartyUserBegin());
+        return Axios.post("http://localhost:8080/api/user/register/thirdparty", user)
+        .then(json => {
+            dispatch(registerThirdPartyUserSuccess(json.data));
+            return json.data;
+        })
+        .catch(error => dispatch(registerThirdPartyUserFailure(error)));
+    }
+}
+
+export function registerThirdPartyUserBegin() {
+    return {
+        type: "REGISTER_EXTERNAL_USER_BEGIN"
+    }
+}
+
+export function registerThirdPartyUserSuccess(userResult) {
+    return {
+        type: "REGISTER_EXTERNAL_USER_SUCCESS",
+        payload: userResult
+    }
+}
+
+export function registerThirdPartyUserFailure(error) {
+    return {
+        type: "REGISTER_EXTERNAL_USER_FAILURE",
+        payload: error
+    }
+}

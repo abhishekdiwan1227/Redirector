@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { checkForLoggedInUser } from '../actions/userActions'
-import { addUriToClient, showUrlSearches } from '../actions/searchActions'
+import { addUriToClient, showUrlSearches, getRoutesHistory } from '../actions/searchActions'
 
 class Searcher extends Component {
     constructor(props) {
@@ -28,6 +28,7 @@ class Searcher extends Component {
     }
 
     handleRouteListClick = event => {
+        this.props.getHistory(this.props.userId);
         this.props.showPreviousSearches()
     }
 
@@ -60,7 +61,8 @@ function mapStateToProps(state) {
     return {
         isUserLoggedIn: state.user.isLoggedIn,
         userId: state.user.userId,
-        toRoutingListPage: state.search.toRoutingListPage
+        toRoutingListPage: state.search.toRoutingListPage,
+        history: state.search.searchedUris
     }
 }
 
@@ -68,7 +70,8 @@ function mapDispatchToProps(dispatch) {
     return {
         validLoggedInUser: token => { dispatch(checkForLoggedInUser(token)) },
         searchUri: (uri, userId) => { dispatch(addUriToClient(uri, userId)) },
-        showPreviousSearches: () => { dispatch(showUrlSearches())}
+        getHistory: userId => {dispatch(getRoutesHistory(userId))},
+        showPreviousSearches: () => { dispatch(showUrlSearches())},
     }
 }
 
